@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base href="/">
+  <meta charset="UTF-8">
+  <title>Ummah B2B Admin Console</title>
+  <meta name="description" content="Ummah Mosque Prayer Timetable Verification Queue">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Ummah Admin">
+
+  <script src="flutter.js" defer></script>
+</head>
+<body style="background-color: #121212; color: #FFFFFF; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; overflow: hidden;">
+  <div style="text-align: center;">
+    <h2 style="font-weight: 300; margin-bottom: 8px;">Ummah Admin Panel</h2>
+    <p style="color: #888888; font-size: 14px; margin-top: 0;">Bootstrapping portal...</p>
+  </div>
+  <script>
+    window.addEventListener('load', function(ev) {
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function(engineInitializer) {
+          engineInitializer.initializeEngine().then(function(appRunner) {
+            appRunner.runApp();
+          });
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# Node.js Backend
+Ummah-backend/node_modules/
+Ummah-backend/.env
+Ummah-backend/.env.*
+*.log
+
+# Flutter Mobile & Admin Web
+*/.dart_tool/
+*/build/
+*/.flutter-plugins
+*/.flutter-plugins-dependencies
+*/.packages
+*.jks
+*.keystore
+
+# Mac/Windows System files
+.DS_Store
+Thumbs.db
