@@ -49,9 +49,12 @@ class MosqueDetailScreen extends ConsumerWidget {
             surfaceTintColor: Colors.transparent,
             flexibleSpace: FlexibleSpaceBar(
               // The 3D viewport fills the collapsed header
-              background: Mosque3DViewport(
-                mosqueId: mosque.id,
-                height:   320,
+              background: Hero(
+                tag: 'mosque_viewport_hero_${mosque.id}',
+                child: Mosque3DViewport(
+                  mosqueId: mosque.id,
+                  height:   320,
+                ),
               ),
             ),
           ),

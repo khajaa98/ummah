@@ -29,6 +29,8 @@ import '../../../../core/errors/app_exception.dart';
 import '../../data/models/mosque_model.dart';
 import '../providers/nearby_mosques_provider.dart';
 import '../widgets/mosque_card.dart';
+import '../../../../widgets/prayer_tracker_widget.dart';
+import 'mosque_detail_screen.dart';
 
 class NearbyMosquesScreen extends ConsumerStatefulWidget {
   const NearbyMosquesScreen({super.key});
@@ -216,6 +218,7 @@ class _MosqueList extends StatelessWidget {
 
     return Column(
       children: [
+        const PrayerTrackerWidget(),
         // Result count header
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 4),
