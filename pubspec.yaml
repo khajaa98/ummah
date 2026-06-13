@@ -1,0 +1,65 @@
+name: ummah
+description: Ummah — Hyper-localized Islamic lifestyle app
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+  flutter: '>=3.19.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State management & DI
+  flutter_riverpod: ^2.5.1
+
+  # HTTP
+  http: ^1.2.1
+
+  # Location — permission handling + GPS
+  geolocator: ^12.0.0
+
+  # Permission rationale dialog + open-settings button
+  permission_handler: ^11.3.1
+
+  # Secure JWT storage
+  #   Android: EncryptedSharedPreferences (AES-256), requires minSdkVersion 23
+  #   iOS:     Keychain Services
+  flutter_secure_storage: ^9.2.2
+
+  # 3D mosque gamification (Sprint 5)
+  flutter_3d_controller: ^2.3.0
+
+  # Typography — Inter for Latin, Noto Sans Arabic for RTL (Sprint 7)
+  google_fonts: ^6.2.1
+
+  # Qibla compass — magnetometer access (Sprint 7)
+  flutter_compass: ^0.8.0
+
+  # Accelerometer for Qibla tilt detection + figure-8 calibration UX (Phase 5)
+  sensors_plus: ^6.0.1
+
+  # Local prayer-time alerts (Sprint 7)
+  flutter_local_notifications: ^17.2.1
+  timezone: ^0.9.4
+
+  # In-app purchases via RevenueCat (Phase 6)
+  purchases_flutter: ^8.2.2
+
+  # Crash + error telemetry (Phase 7) — DSN injected via --dart-define
+  sentry_flutter: ^9.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  mocktail: ^1.0.4
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/models/

@@ -1,0 +1,88 @@
+# fly.toml
+# =============================================================================
+# Ummah — Fly.io application config.
+#
+# App name: change "ummah-backend" to whatever's unique on your account.
+# Region:   "bom" (Mumbai) for India launch; pick the closest to your users.
+#
+# Pre-flight (once per app):
+#   fly launch --no-deploy --copy-config           # generates this file & creates the app
+#   fly postgres create --name ummah-db --region bom
+#   fly postgres attach --app ummah-backend ummah-db     # sets DATABASE_URL
+#   fly redis create --name ummah-cache --region bom     # Upstash-backed
+#   fly redis status ummah-cache                         # grab the REDIS_URL
+#   fly secrets set --app ummah-backend \
+#       JWT_SECRET=$(openssl rand -base64 48) \
+#       REDIS_URL="redis://default:xxx@fly-ummah-cache.upstash.io:6379"
+#
+# Deploy:
+#   fly deploy
+# =============================================================================
+
+app           = "ummah-backend"
+primary_region = "bom"
+kill_signal   = "SIGTERM"
+kill_timeout  = 10
+
+# ---------------------------------------------------------------------------
+# Build — uses the Dockerfile in this directory
+# ---------------------------------------------------------------------------
+
+[build]
+  dockerfile = "Dockerfile"
+
+# ---------------------------------------------------------------------------
+# Release command — runs once before every new version is rolled out.
+# Applies any pending Prisma migrations against the production DB.
+# Fails the deploy if migrations fail, so we never serve traffic against a
+# stale schema.
+# ---------------------------------------------------------------------------
+
+[deploy]
+  release_command = "npx prisma migrate deploy"
+
+# ---------------------------------------------------------------------------
+# Environment — non-secret config
+# Secrets (DATABASE_URL, REDIS_URL, JWT_SECRET, GEMINI_API_KEY) live in
+# `fly secrets set`, NOT here.
+# ---------------------------------------------------------------------------
+
+[env]
+  NODE_ENV = "production"
+  PORT     = "8080"
+
+# ---------------------------------------------------------------------------
+# HTTP service — Fly's edge proxies route 80/443 -> our internal_port
+# ---------------------------------------------------------------------------
+
+[http_service]
+  internal_port           = 8080
+  force_https             = true
+  auto_stop_machines      = "stop"     # scale to zero when idle (free-tier friendly)
+  auto_start_machines     = true
+  min_machines_running    = 0
+  processes               = ["app"]
+
+  [http_service.concurrency]
+    type       = "requests"
+    soft_limit = 200
+    hard_limit = 250
+
+# ---------------------------------------------------------------------------
+# Health check — Fly's proxy hits this; routes are not added until 200 OK
+# ---------------------------------------------------------------------------
+
+[[http_service.checks]]
+  grace_period  = "10s"
+  interval      = "30s"
+  method        = "GET"
+  timeout       = "5s"
+  path          = "/health"
+
+# ---------------------------------------------------------------------------
+# VM sizing — shared-cpu-1x with 256MB is the free-tier slot
+# ---------------------------------------------------------------------------
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "256mb"

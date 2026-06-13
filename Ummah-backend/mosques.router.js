@@ -34,6 +34,9 @@ import { rateLimiter }            from './rateLimiter.js';
 import { validateNearby }         from './validateNearby.js';
 import { getNearbyMosques }       from './mosques.nearby.controller.js';
 import { processTimetableImage, listAllMosques, verifyTimings }  from './mosques.admin.controller.js';
+import { getMosqueTimings }       from './mosques.timings.controller.js';
+import { checkInAtMosque }        from './mosques.checkin.controller.js';
+import { searchMosques }          from './mosques.search.controller.js';
 
 const router = Router();
 
@@ -84,6 +87,13 @@ function handleMulterError(err, _req, res, next) {
 router.get('/', authenticate, listAllMosques);
 
 // ---------------------------------------------------------------------------
+// GET /v1/mosques/search?q=...
+// Text search — used when user declines GPS, allows manual mosque discovery.
+// Placed BEFORE /:mosqueId routes so Express doesn't swallow "search" as an ID.
+// ---------------------------------------------------------------------------
+router.get('/search', authenticate, searchMosques);
+
+// ---------------------------------------------------------------------------
 // GET /v1/mosques/nearby
 // Full middleware chain preserved — rateLimiter and validateNearby are NOT optional
 // ---------------------------------------------------------------------------
@@ -115,15 +125,18 @@ router.post(
 router.put('/:mosqueId/timings/:timingId/verify', authenticate, verifyTimings);
 
 // ---------------------------------------------------------------------------
-// Placeholder stubs — to be implemented in subsequent sprints
+// GET /v1/mosques/:mosqueId/timings  — verified prayer timings for a mosque
 // ---------------------------------------------------------------------------
+router.get('/:mosqueId/timings', authenticate, getMosqueTimings);
 
-// GET /v1/mosques/:mosqueId/timings  — fetch verified prayer timings
-router.get('/:mosqueId/timings', authenticate, (_req, res) => {
-  res.status(501).json({ error: { code: 'NOT_IMPLEMENTED', message: 'Coming soon.' } });
-});
+// ---------------------------------------------------------------------------
+// POST /v1/mosques/:mosqueId/checkin — record attendance for a prayer slot
+// ---------------------------------------------------------------------------
+router.post('/:mosqueId/checkin', authenticate, rateLimiter('checkin', 20, 60_000), checkInAtMosque);
 
-// POST /v1/mosques  — register a new mosque
+// ---------------------------------------------------------------------------
+// POST /v1/mosques  — register a new mosque (stub — Sprint 8)
+// ---------------------------------------------------------------------------
 router.post('/', authenticate, (_req, res) => {
   res.status(501).json({ error: { code: 'NOT_IMPLEMENTED', message: 'Coming soon.' } });
 });

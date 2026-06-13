@@ -1,26 +1,50 @@
-# Base image
-FROM node:20-alpine
+# =============================================================================
+# Ummah backend — production Dockerfile (multi-stage).
+#
+# Stage 1 ("deps") installs production-only Node modules with a deterministic
+# npm ci. Stage 2 ("runner") copies just the artifacts we need, runs as a
+# non-root user, and tags the listening port for Fly.io's proxy.
+# =============================================================================
 
-# Set working directory
+# ---------- Stage 1: deps + Prisma generate ----------
+FROM node:20-alpine AS deps
+
 WORKDIR /app
 
-# Install OpenSSL (required for Prisma on Alpine)
-RUN apk add --no-cache openssl
+# Prisma engine needs OpenSSL
+RUN apk add --no-cache openssl libc6-compat
 
-# Copy package files first to leverage Docker layer caching
+# Deterministic install — fails if package-lock.json drifts
 COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Install dependencies
-RUN npm install
+# Copy schema + generate Prisma client into the same node_modules tree
+COPY schema.prisma ./schema.prisma
+RUN npx prisma generate --schema=./schema.prisma
 
-# Copy the rest of the backend source code
-COPY . .
+# ---------- Stage 2: runtime ----------
+FROM node:20-alpine AS runner
 
-# Generate Prisma Client
-RUN npx prisma generate
+WORKDIR /app
 
-# Expose the API port
-EXPOSE 3000
+RUN apk add --no-cache openssl libc6-compat tini && \
+    addgroup -g 1001 -S nodejs && \
+    adduser  -u 1001 -S ummah -G nodejs
 
-# Start the server using the flat server.js file
+# Bring in deps + generated client from stage 1
+COPY --from=deps --chown=ummah:nodejs /app/node_modules ./node_modules
+COPY --from=deps --chown=ummah:nodejs /app/package*.json ./
+
+# Application source
+COPY --chown=ummah:nodejs . .
+
+USER ummah
+
+ENV NODE_ENV=production \
+    PORT=8080
+
+EXPOSE 8080
+
+# tini reaps zombie processes (Fly's machine SIGTERMs need to propagate cleanly)
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD ["node", "server.js"]

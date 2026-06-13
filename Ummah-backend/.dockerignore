@@ -1,2 +1,16 @@
 node_modules/
 .env
+.env.*
+.git/
+.gitignore
+.dockerignore
+Dockerfile
+fly.toml
+FLY_DEPLOY.md
+*.md
+.vscode/
+.idea/
+coverage/
+test_dom.js
+seed.js
+seedUser.js

@@ -40,7 +40,10 @@ services:
       # Use internal Docker DNS names to connect to DB and Redis
       - DATABASE_URL=postgresql://ummah_admin:ummah_password@postgres:5432/ummah_db?schema=public
       - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=${JWT_SECRET:-fallback_secret_for_dev_only}
+      # redis.js uses HOST/PORT split form, so set them explicitly here too
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=${JWT_SECRET:-4a9f2c8e1d7b3a6f5e0c2d9b8a4f1e7c3d6b9a2e5f8c1d4b7a0e3f6c9d2b5a8}
       - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
       redis:

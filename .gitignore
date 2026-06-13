@@ -16,3 +16,24 @@ Ummah-backend/.env.*
 # Mac/Windows System files
 .DS_Store
 Thumbs.db
+
+# Root secrets and IDE config
+.env
+.env.*
+.idea/
+
+# Additional secrets and keys
+*.pem
+*.key
+Ummah-backend/.ummah-deploy.env
+Ummah-backend/ummah-key.pem
+
+# Root-level Flutter build dirs (your existing patterns only catch nested */build/)
+.dart_tool/
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.metadata
+
+# IntelliJ/Android Studio
+*.iml

@@ -1,0 +1,104 @@
+// android/app/build.gradle
+// =============================================================================
+// Ummah — Android app module Gradle config.
+//
+// Key choices:
+//   • minSdk 23 — required by flutter_secure_storage's EncryptedSharedPrefs
+//                  (AES-256 keystore-backed)
+//   • compileSdk / targetSdk 34 — Play Store August 2024 requirement
+//   • Signing config reads from key.properties (NOT checked into git)
+// =============================================================================
+
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
+
+// -----------------------------------------------------------------------------
+// Signing config — reads android/key.properties if present
+// -----------------------------------------------------------------------------
+
+def keystoreProperties = new Properties()
+def keystorePropertiesFile = rootProject.file('key.properties')
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
+android {
+    namespace = "app.ummah.ummah"
+    compileSdk = 36
+    ndkVersion flutter.ndkVersion
+
+    compileOptions {
+        // Core library desugaring is required by flutter_local_notifications
+        // so it can use modern Java time APIs on minSdk < 26.
+        coreLibraryDesugaringEnabled true
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    defaultConfig {
+        applicationId = "app.ummah.ummah"
+        minSdkVersion = flutter.minSdkVersion      // flutter_secure_storage requirement
+        targetSdk     = 34
+        versionCode   = flutterVersionCode.toInteger()
+        versionName   = flutterVersionName
+        multiDexEnabled = true
+    }
+
+    signingConfigs {
+        release {
+            if (keystorePropertiesFile.exists()) {
+                keyAlias      keystoreProperties['keyAlias']
+                keyPassword   keystoreProperties['keyPassword']
+                storeFile     keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
+                storePassword keystoreProperties['storePassword']
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            // If you haven't generated a keystore yet, the build falls back
+            // to the debug key so `flutter build apk --release` still works
+            // for personal sideload testing. Don't ship to the Play Store
+            // with a debug key.
+            signingConfig keystorePropertiesFile.exists()
+                ? signingConfigs.release
+                : signingConfigs.debug
+
+            minifyEnabled  true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                          'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "androidx.multidex:multidex:2.0.1"
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"
+}
