@@ -56,10 +56,10 @@ class PrayerTrackerNotifier extends StateNotifier<PrayerTrackerState> {
           lastDate: today,
         );
       }
-      this.state = loadedState;
+      state = loadedState;
     } else {
       // Fresh install or first-time setup
-      this.state = PrayerTrackerState.initial().copyWith(lastDate: today);
+      state = PrayerTrackerState.initial().copyWith(lastDate: today);
     }
     _saveState();
   }

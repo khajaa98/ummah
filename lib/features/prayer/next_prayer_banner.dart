@@ -177,7 +177,7 @@ class _CountdownBannerState extends State<_CountdownBanner> {
             width:  56,
             height: 56,
             decoration: BoxDecoration(
-              color:        fg.withOpacity(0.12),
+              color:        fg.withValues(alpha: 0.12),
               shape:        BoxShape.circle,
             ),
             alignment: Alignment.center,
@@ -205,7 +205,7 @@ class _CountdownBannerState extends State<_CountdownBanner> {
                     Text(
                       'at ${next.timeStr}',
                       style: text.bodyMedium?.copyWith(
-                        color: fg.withOpacity(0.75),
+                        color: fg.withValues(alpha: 0.75),
                       ),
                     ),
                   ],
@@ -214,7 +214,7 @@ class _CountdownBannerState extends State<_CountdownBanner> {
                 Text(
                   'in ${_formatRemaining(next.remaining)} · ${widget.mosque.name}',
                   style: text.bodySmall?.copyWith(
-                    color: fg.withOpacity(0.85),
+                    color: fg.withValues(alpha: 0.85),
                   ),
                   maxLines:  1,
                   overflow:  TextOverflow.ellipsis,

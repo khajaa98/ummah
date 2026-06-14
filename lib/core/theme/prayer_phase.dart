@@ -48,7 +48,7 @@ enum PrayerPhase {
   /// rather than waking every minute to re-check.
   Duration durationToNextTransition() {
     final now     = DateTime.now();
-    final todayAt = (int h, int m) =>
+    DateTime todayAt(int h, int m) =>
         DateTime(now.year, now.month, now.day, h, m);
 
     // Ordered list of boundary points for today

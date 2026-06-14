@@ -11,7 +11,6 @@
 // =============================================================================
 
 import 'dart:convert';
-import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:file_picker/file_picker.dart';
@@ -19,7 +18,6 @@ import 'package:http/http.dart' as http;
 import 'package:google_fonts/google_fonts.dart';
 
 import '../models/mosque.dart';
-import '../models/prayer_timing.dart';
 
 // ---------------------------------------------------------------------------
 // Base URL configuration (fallback to localhost:3000)
@@ -398,7 +396,7 @@ class _VerificationQueueScreenState extends ConsumerState<VerificationQueueScree
                             return const Text('Paste admin token to load mosques');
                           }
                           return DropdownButtonFormField<Mosque>(
-                            value: selectedMosque,
+                            initialValue: selectedMosque,
                             hint: const Text('Select Mosque to Upload'),
                             decoration: InputDecoration(
                               labelText: 'Mosque',

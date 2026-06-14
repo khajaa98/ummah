@@ -182,13 +182,13 @@ class _Mosque3DViewportState extends ConsumerState<Mosque3DViewport>
                           Icon(
                             Icons.blur_circular_rounded,
                             size: 40,
-                            color: scheme.onSurfaceVariant.withOpacity(0.3),
+                            color: scheme.onSurfaceVariant.withValues(alpha: 0.3),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             'Building your mosque…',
                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: scheme.onSurfaceVariant.withOpacity(0.5),
+                              color: scheme.onSurfaceVariant.withValues(alpha: 0.5),
                               fontWeight: FontWeight.w600,
                               letterSpacing: 0.5,
                             ),
@@ -219,7 +219,7 @@ class _TierBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color:        scheme.surfaceContainerHighest.withOpacity(0.85),
+        color:        scheme.surfaceContainerHighest.withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(20),
         border:       Border.all(color: scheme.outlineVariant),
       ),
@@ -267,7 +267,7 @@ class _TierProgressBar extends StatelessWidget {
         message: '$checkIns / $next check-ins to next upgrade',
         child:   LinearProgressIndicator(
           value:            progress,
-          backgroundColor:  scheme.surfaceContainerHighest.withOpacity(0.5),
+          backgroundColor:  scheme.surfaceContainerHighest.withValues(alpha: 0.5),
           valueColor:       AlwaysStoppedAnimation<Color>(scheme.primary),
           minHeight:        3,
         ),

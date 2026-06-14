@@ -37,3 +37,8 @@ build/
 
 # IntelliJ/Android Studio
 *.iml
+
+# Accidental root-level npm installs (real backend lives in Ummah-backend/)
+/node_modules/
+/package.json
+/package-lock.json

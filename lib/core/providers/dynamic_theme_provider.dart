@@ -24,7 +24,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../theme/app_themes.dart';
-import '../theme/prayer_phase.dart';
 import 'prayer_phase_provider.dart';
 
 /// Synchronously derives the active [ThemeData] from [prayerPhaseProvider].

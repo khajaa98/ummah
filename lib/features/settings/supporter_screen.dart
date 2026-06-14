@@ -340,7 +340,7 @@ class _HeroPitch extends StatelessWidget {
                 ? 'Your contribution funds new mosques being onboarded by hand. Manage your subscription anytime in your App Store / Play Store account.'
                 : 'Ummah is funded entirely by Muslims who believe technology can serve faith without selling souls. If that\'s you, JazakAllah Khair.',
             style: text.bodyMedium?.copyWith(
-              color:  scheme.onPrimaryContainer.withOpacity(0.85),
+              color:  scheme.onPrimaryContainer.withValues(alpha: 0.85),
               height: 1.5,
             ),
           ),
@@ -384,7 +384,7 @@ class _TierCard extends StatelessWidget {
           padding:  const EdgeInsets.all(14),
           decoration: BoxDecoration(
             color: isSelected
-                ? scheme.primaryContainer.withOpacity(0.35)
+                ? scheme.primaryContainer.withValues(alpha: 0.35)
                 : scheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(

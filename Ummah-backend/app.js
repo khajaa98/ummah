@@ -7,6 +7,7 @@ import express        from 'express';
 import helmet         from 'helmet';
 import morgan         from 'morgan';
 import mosquesRouter  from './mosques.router.js';
+import authRouter     from './auth.router.js';        // ← ADDED for /v1/auth/*
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use(
 // ---------------------------------------------------------------------------
 // Routes
 // ---------------------------------------------------------------------------
+app.use('/v1/auth',    authRouter);                   // ← ADDED for register/login
 app.use('/v1/mosques', mosquesRouter);
 
 // Health check (no auth, used by load balancer)

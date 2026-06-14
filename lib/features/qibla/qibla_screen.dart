@@ -448,7 +448,7 @@ class _AccuracyPill extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color:        color.withOpacity(0.12),
+        color:        color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
@@ -461,7 +461,7 @@ class _AccuracyPill extends StatelessWidget {
               height: 6.0 + i * 4,
               margin: const EdgeInsets.symmetric(horizontal: 1),
               decoration: BoxDecoration(
-                color: i < _bars() ? color : color.withOpacity(0.25),
+                color: i < _bars() ? color : color.withValues(alpha: 0.25),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -542,7 +542,7 @@ class _CalibrationOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: scheme.surface.withOpacity(0.94),
+      color: scheme.surface.withValues(alpha: 0.94),
       alignment: Alignment.center,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -609,7 +609,7 @@ class _CompassRosePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final paint  = Paint()
-      ..color     = scheme.onSurfaceVariant.withOpacity(0.3)
+      ..color     = scheme.onSurfaceVariant.withValues(alpha: 0.3)
       ..strokeWidth = 1.5
       ..style     = PaintingStyle.stroke;
 

@@ -12,6 +12,11 @@
 //     loaded and the Android channel is created before any schedule call.
 //   • UmmahShell listens to favouriteMosqueProvider + mosqueTimingsProvider
 //     and re-schedules prayer-time alerts whenever either changes.
+//
+// V1.1 additions:
+//   • _AuthGate: after onboarding, checks TokenService for a JWT. If absent,
+//     shows AuthScreen (login/register). After successful auth, falls through
+//     to UmmahShell.
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -19,6 +24,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'core/providers/dynamic_theme_provider.dart';
+import 'features/auth/auth_screen.dart';
 import 'features/mosques/data/models/prayer_timing.dart';
 import 'features/mosques/presentation/providers/favourite_mosque_provider.dart';
 import 'features/mosques/presentation/providers/prayer_timings_provider.dart';
@@ -26,15 +32,13 @@ import 'features/mosques/presentation/screens/nearby_mosques_screen.dart';
 import 'features/onboarding/onboarding_screen.dart';
 import 'features/qibla/qibla_screen.dart';
 import 'features/settings/supporter_screen.dart';
+import 'services/auth/token_service.dart';
 import 'services/notifications/notification_service.dart';
 import 'services/purchases/purchases_service.dart';
 import 'services/telemetry/sentry_init.dart';
 
 Future<void> main() async {
-  // runUmmah() ensures WidgetsFlutterBinding is initialized inside the
-  // Sentry zone so unhandled errors during startup are still captured.
   await runUmmah(() {
-    // Fire-and-forget service init — they self-guard against running twice.
     NotificationService.instance.init();
     PurchasesService.instance.configure();
     return const ProviderScope(child: UmmahApp());
@@ -92,7 +96,6 @@ class _OnboardingGateState extends State<_OnboardingGate> {
 
   @override
   Widget build(BuildContext context) {
-    // Still loading flag from storage — show blank surface (< 1 frame)
     if (_onboardingComplete == null) {
       return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -102,6 +105,51 @@ class _OnboardingGateState extends State<_OnboardingGate> {
     if (!_onboardingComplete!) {
       return OnboardingScreen(
         onComplete: () => setState(() => _onboardingComplete = true),
+      );
+    }
+
+    // Onboarding done → hand off to auth gate
+    return const _AuthGate();
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Auth gate — checks TokenService for a JWT
+// ---------------------------------------------------------------------------
+
+class _AuthGate extends ConsumerStatefulWidget {
+  const _AuthGate();
+
+  @override
+  ConsumerState<_AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends ConsumerState<_AuthGate> {
+  bool? _authenticated; // null = still checking
+
+  @override
+  void initState() {
+    super.initState();
+    _checkToken();
+  }
+
+  Future<void> _checkToken() async {
+    final token = await ref.read(tokenServiceProvider).getToken();
+    if (!mounted) return;
+    setState(() => _authenticated = token != null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_authenticated == null) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+      );
+    }
+
+    if (!_authenticated!) {
+      return AuthScreen(
+        onAuthenticated: () => setState(() => _authenticated = true),
       );
     }
 
@@ -141,7 +189,6 @@ class _UmmahShellState extends ConsumerState<UmmahShell> {
     ),
   ];
 
-  // Using IndexedStack keeps each tab's scroll position alive
   static const _screens = [
     NearbyMosquesScreen(),
     QiblaScreen(),
@@ -152,16 +199,12 @@ class _UmmahShellState extends ConsumerState<UmmahShell> {
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
 
-    // Cancel pending alerts if the user clears their favourite mosque.
     ref.listen(favouriteMosqueProvider, (_, mosque) {
       if (mosque == null) {
         NotificationService.instance.cancelAll();
       }
     });
 
-    // Re-schedule prayer alerts whenever the favourite mosque OR its verified
-    // timings refresh. The derived provider below collapses both sources into
-    // one stream we can listen to.
     ref.listen<AsyncValue<List<PrayerTiming>>?>(
       _favouriteTimingsProvider,
       (_, asyncTimings) {
@@ -194,12 +237,6 @@ class _UmmahShellState extends ConsumerState<UmmahShell> {
     );
   }
 }
-
-// ---------------------------------------------------------------------------
-// Derived provider — surfaces the *current* favourite mosque's timings
-// AsyncValue so the shell can re-schedule notifications reactively.
-// Returns null when no favourite is set.
-// ---------------------------------------------------------------------------
 
 final _favouriteTimingsProvider =
     Provider<AsyncValue<List<PrayerTiming>>?>((ref) {

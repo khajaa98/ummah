@@ -40,8 +40,8 @@ class MosqueCard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(24),
         side: BorderSide(
           color: isFav
-              ? colorScheme.primary.withOpacity(0.5)
-              : colorScheme.outlineVariant.withOpacity(0.8),
+              ? colorScheme.primary.withValues(alpha: 0.5)
+              : colorScheme.outlineVariant.withValues(alpha: 0.8),
           width: isFav ? 1.5 : 0.8,
         ),
       ),
@@ -227,10 +227,10 @@ class _VerifiedBadge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color:        colorScheme.secondaryContainer.withOpacity(0.6),
+        color:        colorScheme.secondaryContainer.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(6),
         border:       Border.all(
-          color: colorScheme.secondary.withOpacity(0.4),
+          color: colorScheme.secondary.withValues(alpha: 0.4),
           width: 0.5,
         ),
       ),

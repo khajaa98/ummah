@@ -239,7 +239,7 @@ class _SlidePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             decoration: BoxDecoration(
-              color:        scheme.primaryContainer.withOpacity(0.5),
+              color:        scheme.primaryContainer.withValues(alpha: 0.5),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Text(

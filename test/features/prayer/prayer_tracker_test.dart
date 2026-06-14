@@ -9,8 +9,8 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 // Import paths mapped to lib/ folder structure
-import 'package:ummah/models/prayer_tracker_state.dart';
-import 'package:ummah/providers/prayer_tracker_provider.dart';
+import 'package:ummah/features/prayer/state/prayer_tracker_state.dart';
+import 'package:ummah/features/prayer/providers/prayer_tracker_provider.dart';
 
 class MockFlutterSecureStorage extends Mock implements FlutterSecureStorage {}
 
@@ -216,7 +216,7 @@ void main() {
       expect(notifier.state.streak, 8);
       expect(notifier.state.isMensesPaused, true);
     });
-  Group('Verification Summary', () {
+  group('Verification Summary', () {
     test('confirm haptic invocation logs do not crash test environment', () {
       // Basic call to ensure platform channels are mocked or ignored gracefully
       expect(true, true);

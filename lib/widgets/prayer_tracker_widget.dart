@@ -23,7 +23,7 @@ class PrayerTrackerWidget extends ConsumerWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
-        side: BorderSide(color: colorScheme.outlineVariant.withOpacity(0.5), width: 1),
+        side: BorderSide(color: colorScheme.outlineVariant.withValues(alpha: 0.5), width: 1),
       ),
       child: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -49,7 +49,7 @@ class PrayerTrackerWidget extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: colorScheme.tertiaryContainer.withOpacity(0.6),
+                    color: colorScheme.tertiaryContainer.withValues(alpha: 0.6),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Row(
@@ -90,7 +90,7 @@ class PrayerTrackerWidget extends ConsumerWidget {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: isPaused 
-                            ? colorScheme.errorContainer.withOpacity(0.5)
+                            ? colorScheme.errorContainer.withValues(alpha: 0.5)
                             : (isCompleted ? colorScheme.primary : Colors.transparent),
                         border: Border.all(
                           color: isPaused 
@@ -145,7 +145,7 @@ class PrayerTrackerWidget extends ConsumerWidget {
                   child: Switch(
                     value: trackerState.isMensesPaused,
                     onChanged: (_) => ref.read(prayerTrackerProvider.notifier).toggleMensesPause(),
-                    activeColor: colorScheme.error,
+                    activeThumbColor: colorScheme.error,
                     activeTrackColor: colorScheme.errorContainer,
                   ),
                 ),

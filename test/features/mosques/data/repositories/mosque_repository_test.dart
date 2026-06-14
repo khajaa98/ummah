@@ -22,7 +22,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:geolocator/geolocator.dart' hide LocationServiceDisabledException;
 
 // Canonical import paths matching lib/ folder structure (see sprint3_backlog.md)
 import 'package:ummah/core/errors/app_exception.dart';

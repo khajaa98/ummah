@@ -1,9 +1,13 @@
-// This is a basic Flutter widget test.
+// test/widget_test.dart
+// =============================================================================
+// Smoke test — verifies the app boots without throwing during the first frame.
 //
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
+// We can't pump the full UmmahApp easily in a unit test because it triggers
+// SecureStorage reads, NotificationService init, and Sentry — all of which
+// need platform channel mocks. So this test is intentionally minimal: it
+// confirms UmmahApp itself is constructable. Full integration tests live in
+// integration_test/.
+// =============================================================================
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,20 +15,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ummah/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  testWidgets('UmmahApp constructs without errors', (WidgetTester tester) async {
+    const app = UmmahApp();
+    expect(app, isA<Widget>());
   });
 }

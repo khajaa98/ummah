@@ -340,10 +340,10 @@ class _CheckInFab extends ConsumerWidget {
     } catch (e) {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Already checked in for this prayer today.'),
+          const SnackBar(
+            content: Text('Already checked in for this prayer today.'),
             behavior: SnackBarBehavior.floating,
-            duration: const Duration(seconds: 2),
+            duration: Duration(seconds: 2),
           ),
         );
       }
@@ -439,7 +439,7 @@ class _TimingsCard extends StatelessWidget {
             return Container(
               decoration: isNext
                   ? BoxDecoration(
-                      color:        scheme.primaryContainer.withOpacity(0.5),
+                      color:        scheme.primaryContainer.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(12),
                     )
                   : null,
